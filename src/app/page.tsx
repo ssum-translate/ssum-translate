@@ -21,6 +21,7 @@ import { context } from "./data";
 import * as animationData from "@/assets/lotties/loader.json";
 
 import { cn } from "@/lib/utils";
+import { sendChatGPT } from "./actions";
 
 const USER_TYPE = {
   MALE: "male",
@@ -33,26 +34,6 @@ interface Result {
   translatedText: string;
   detailDescription: string;
 }
-
-const fetchChatGPTResponse = async (context: string, userInput: string) => {
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: "gpt-4",
-      messages: [
-        { role: "system", content: context },
-        { role: "user", content: userInput },
-      ],
-    }),
-  });
-  const data = await response.json();
-
-  return JSON.parse(data.choices[0].message.content);
-};
 
 export default function Home() {
   const [userType, setUserType] = useState<UserType>(USER_TYPE.FEMALE);
@@ -94,6 +75,7 @@ export default function Home() {
 
   const handleTranslateButtonClick = async () => {
     setIsLoading(true);
+
     const { age, relation, mbti } = methods.getValues();
     const data = `{
     "age": ${age},
@@ -104,8 +86,9 @@ export default function Home() {
     "translateText": ${translateText},
 }`;
 
-    const res = await fetchChatGPTResponse(context, data);
+    const res = await sendChatGPT(context, data);
     setResult(res);
+
     setIsLoading(false);
   };
 
