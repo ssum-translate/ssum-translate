@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { ChangeEvent, useEffect, useReducer, useRef, useState } from "react";
+import Lottie from "react-lottie-player";
 
 import doubleArrow from "@/assets/icons/double-arrow.svg";
 import closeIcon from "@/assets/icons/close.svg";
@@ -13,6 +14,7 @@ import Textarea from "@/components/ui/textarea";
 import OptionForm, { OptionData } from "@/components/option";
 import { useForm, FormProvider } from "react-hook-form";
 import { context } from "./data";
+import * as animationData from "@/assets/lotties/loader.json";
 
 import { cn } from "@/lib/utils";
 
@@ -263,17 +265,20 @@ function TranslateResult({ isLoading, userType, gptTranslatedText, onOpenBottomS
           )}
         </div>
       ) : (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "24px 0",
-            color: "#8949FF",
-            fontSize: "24px",
-            fontWeight: "600",
-          }}
-        >
-          약 15초 정도 걸릴 수 있어요.
-        </div>
+        <Lottie loop animationData={animationData} play />
+
+        // <Lottie options={defaultOptions} height={400} width={400} />
+        // <div
+        //   style={{
+        //     textAlign: "center",
+        //     padding: "24px 0",
+        //     color: "#8949FF",
+        //     fontSize: "24px",
+        //     fontWeight: "600",
+        //   }}
+        // >
+        //   약 15초 정도 걸릴 수 있어요.
+        // </div>
       )}
     </div>
   );
@@ -317,7 +322,7 @@ function DescriptionTextarea({ value, onChange }: DescriptionTextareaProps) {
             ref={textareaRef}
             className="bg-[#FAFAFA] text-base placeholder:text-base scrollbar-hide h-6"
             value={value}
-            placeholder="전후 사정을 입력해주시면 더 정확한 결과를 알려드려요"
+            placeholder="ex) 1/2주 동안 썸 타고 있는 여자"
             onChange={handleChange}
           />
           <Textarea ref={hiddenTextareaRef} className="sr-only h-6" />
