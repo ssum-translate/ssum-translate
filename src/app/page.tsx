@@ -6,6 +6,7 @@ import Header from "@/components/header/header";
 import Textarea from "@/components/ui/textarea";
 
 import closeIcon from "@/assets/icons/close.svg";
+import arrowRightIcon from "@/assets/icons/arrow-right.svg";
 
 export default function Home() {
   return (
@@ -14,7 +15,7 @@ export default function Home() {
       <FilterBar />
       <TranslateTextarea />
       <TranslateResult />
-      <div className="flex justify-center mt-14">
+      <div className="flex justify-center">
         <button
           type="button"
           className="flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF]"
@@ -30,7 +31,7 @@ function FilterBar() {
   return (
     <div className="flex justify-between items-center py-3 px-4 font-semibold">
       <div className="w-[135px] text-center">여자어</div>
-      <div className="w-14 h-8 flex justify-center items-center border rounded-full border-[#8949FF]">
+      <div className="w-14 h-8 flex justify-center items-center border rounded-full cursor-pointer border-[#8949FF] bg-[#F6F0FF]">
         <Image src={doubleArrow} alt="" />
       </div>
       <div className="w-[135px] text-center">남자어</div>
@@ -55,9 +56,17 @@ function TranslateTextarea() {
 
 function TranslateResult() {
   return (
-    <div className="py-6 px-4">
-      <div className="text-[#8949FF]">남자어</div>
+    <div className="pt-6 pb-4 px-4">
+      <div className="text-[#8949FF] justify-between items-center flex">
+        <div>남자어</div>
+        <div className="font-semibold text-[#8949FF] underline">상대방은 어떤 사람?</div>
+      </div>
       <div className="mt-2 text-2xl font-semibold">번역한 내용이 보여요</div>
+
+      <div className="p-4 mt-14 flex justify-between items-center bg-[#F6F0FF] rounded-2xl">
+        <div className="font-semibold text-[#8949FF]">더 기똥찬 번역 결과를 보고 싶다면?</div>
+        <Image src={arrowRightIcon} alt="" />
+      </div>
     </div>
   );
 }
