@@ -63,7 +63,7 @@ function TranslateResult() {
       </div>
       <div className="mt-2 text-2xl font-semibold">번역한 내용이 보여요</div>
 
-      <div className="p-4 mt-14 flex justify-between items-center bg-[#F6F0FF] rounded-2xl">
+      <div className="p-4 mt-14 flex justify-between items-center bg-[#F6F0FF] rounded-2xl max-w-[358px] w-full mx-auto">
         <div className="font-semibold text-[#8949FF]">더 기똥찬 번역 결과를 보고 싶다면?</div>
         <Image src={arrowRightIcon} alt="" />
       </div>
