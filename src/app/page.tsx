@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useReducer } from "react";
+import { ChangeEvent, useReducer, useRef, useState } from "react";
 
 import doubleArrow from "@/assets/icons/double-arrow.svg";
 import closeIcon from "@/assets/icons/close.svg";
@@ -13,20 +13,22 @@ import Textarea from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
+  const [translateText, setTranslateText] = useState("");
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setTranslateText(event.target.value);
+  };
   return (
     <div>
       <Header title="남자어, 여자어 번역기" />
       <FilterBar />
-      <TranslateTextarea />
+      <TranslateTextarea value={translateText} onChange={handleChange} />
       <TranslateResult />
-      <div className="flex justify-center">
-        <button
-          type="button"
-          className="flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF] font-bold"
-        >
-          번역하기
-        </button>
-      </div>
+      <button
+        type="button"
+        className="flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF] font-bold mx-auto"
+      >
+        번역하기
+      </button>
     </div>
   );
 }
@@ -43,7 +45,29 @@ function FilterBar() {
   );
 }
 
-function TranslateTextarea() {
+type TranslateTextareaProps = {
+  value: string;
+  onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+};
+
+function TranslateTextarea({ value, onChange }: TranslateTextareaProps) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const hiddenTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const textarea = textareaRef.current;
+    const hiddenTextarea = hiddenTextareaRef.current;
+
+    if (!textarea || !hiddenTextarea) {
+      return;
+    }
+    onChange(event);
+
+    hiddenTextarea.value = value;
+    hiddenTextarea.style.height = "auto";
+    textarea.style.height = `${hiddenTextarea.scrollHeight}px`;
+  };
+
   return (
     <div className="min-h-[112px] bg-[#F8F8F8] py-6 px-4 border shadow-sm  border-[#EEEEEE]">
       <div className="flex justify-between items-center">
@@ -53,7 +77,13 @@ function TranslateTextarea() {
           <Image src={closeIcon} alt="" />
         </button>
       </div>
-      <Textarea className="mt-2" placeholder="번역할 내용을 입력해주세요." />
+      <Textarea
+        ref={textareaRef}
+        className="mt-2 scrollbar-hide"
+        placeholder="번역할 내용을 입력해주세요."
+        onChange={handleChange}
+      />
+      <Textarea ref={hiddenTextareaRef} className="sr-only" />
     </div>
   );
 }
