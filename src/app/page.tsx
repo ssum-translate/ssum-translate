@@ -107,7 +107,7 @@ export default function Home() {
 
   return (
     <div>
-      <Header title="남자어, 여자어 번역기" />
+      <Header />
       <FilterBar userType={userType} toggleUserType={toggleUserType} />
       <DescriptionTextarea value={descriptionText} onChange={handleChangeDescriptionText} />
       <TranslateTextarea
@@ -320,9 +320,9 @@ function DescriptionTextarea({ value, onChange }: DescriptionTextareaProps) {
         <div className="mt-4 space-y-2">
           <Textarea
             ref={textareaRef}
-            className="bg-[#FAFAFA] text-base placeholder:text-base scrollbar-hide h-6"
+            className="bg-[#FAFAFA] text-base placeholder:text-sm placeholder:whitespace-pre-line scrollbar-hide h-16"
             value={value}
-            placeholder="ex) 1/2주 동안 썸 타고 있는 여자"
+            placeholder={`전후 사정을 입력해주시면 더 정확한 결과를 알려드려요.\nex) 데이트 중 저녁메뉴를 정하고 있는 상황, 3년 장기연애해서 편안한 커플사이, 썸녀가 나에게 질문을 하고 있는 상황 등`}
             onChange={handleChange}
           />
           <Textarea ref={hiddenTextareaRef} className="sr-only h-6" />

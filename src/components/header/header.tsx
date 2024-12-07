@@ -1,7 +1,11 @@
-type HeaderProps = {
-  title: string;
-};
+import Image from "next/image";
 
-export default function Header({ title }: HeaderProps) {
-  return <header className="h-[56px] flex justify-center items-center font-semibold">{title}</header>;
+import headerLogo from "@/assets/icons/header-logo.svg";
+
+export default function Header() {
+  return (
+    <header className="h-[56px] flex justify-center items-center font-semibold">
+      <Image src={headerLogo} alt="" />
+    </header>
+  );
 }
