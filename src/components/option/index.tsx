@@ -61,7 +61,7 @@ export default OptionForm;
 function OptionHeader({ onCloseBottomSheet }: OptionFormProps) {
   return (
     <div className="flex justify-between font-medium text-[#121212]">
-      <span className="text-[#121212] text-lg font-semibold leading-6">상대방는 어떤 사람?</span>
+      <span className="text-[#121212] text-lg font-semibold leading-6">상대방은 어떤 사람?</span>
       <button type="button" onClick={onCloseBottomSheet}>
         <Image src={closeBlackIcon} alt="" />
       </button>
