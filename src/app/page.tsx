@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ChangeEvent, useEffect, useReducer, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useReducer, useRef, useState, useTransition } from "react";
 
 import dynamic from "next/dynamic";
 
@@ -44,7 +44,8 @@ export default function Home() {
     translatedText: "",
     detailDescription: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
   const methods = useForm<OptionData>();
 
   const toggleUserType = () => {
@@ -74,8 +75,6 @@ export default function Home() {
   };
 
   const handleTranslateButtonClick = async () => {
-    setIsLoading(true);
-
     const { age, relation, mbti } = methods.getValues();
     const data = `{
     "age": ${age},
@@ -86,10 +85,10 @@ export default function Home() {
     "translateText": ${translateText},
 }`;
 
-    const res = await sendChatGPT(context, data);
-    setResult(res);
-
-    setIsLoading(false);
+    startTransition(async () => {
+      const res = await sendChatGPT(context, data);
+      setResult(res);
+    });
   };
 
   return (
@@ -104,7 +103,7 @@ export default function Home() {
         clearTranslateText={clearTranslateText}
       />
       <TranslateResult
-        isLoading={isLoading}
+        isLoading={isPending}
         userType={userType}
         gptTranslatedText={result}
         onOpenBottomSheet={handleOpenBottomSheet}
@@ -115,7 +114,7 @@ export default function Home() {
           "flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-2xl text-white bg-[#8949FF] font-bold mx-auto disabled:text-[#BCBCBC] disabled:bg-[#E8E8E8]",
         )}
         onClick={handleTranslateButtonClick}
-        disabled={!translateText || isLoading}
+        disabled={!translateText || isPending}
       >
         번역하기
       </button>
