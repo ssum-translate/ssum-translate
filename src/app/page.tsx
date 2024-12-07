@@ -6,11 +6,13 @@ import { ChangeEvent, useEffect, useReducer, useRef, useState } from "react";
 import doubleArrow from "@/assets/icons/double-arrow.svg";
 import closeIcon from "@/assets/icons/close.svg";
 import arrowDownIcon from "@/assets/icons/arrow-down.svg";
+import starIcon from "@/assets/icons/star.svg";
 
 import Header from "@/components/header/header";
 import Textarea from "@/components/ui/textarea";
 import OptionForm, { OptionData } from "@/components/option";
 import { useForm, FormProvider } from "react-hook-form";
+import { context } from "./data";
 
 import { cn } from "@/lib/utils";
 
@@ -20,6 +22,11 @@ const USER_TYPE = {
 } as const;
 
 type UserType = (typeof USER_TYPE)[keyof typeof USER_TYPE];
+
+interface Result {
+  translatedText: string;
+  detailDescription: string;
+}
 
 const fetchChatGPTResponse = async (context: string, userInput: string) => {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -37,7 +44,8 @@ const fetchChatGPTResponse = async (context: string, userInput: string) => {
     }),
   });
   const data = await response.json();
-  return data.choices[0].message.content;
+
+  return JSON.parse(data.choices[0].message.content);
 };
 
 export default function Home() {
@@ -45,7 +53,11 @@ export default function Home() {
   const [descriptionText, setDescriptionText] = useState("");
   const [translateText, setTranslateText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState({
+    translatedText: "",
+    detailDescription: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const methods = useForm<OptionData>();
 
   const toggleUserType = () => {
@@ -80,14 +92,20 @@ export default function Home() {
   };
 
   const handleTranslateButtonClick = async () => {
+    setIsLoading(true);
     const { age, relation, mbti } = methods.getValues();
-    const context = `${age}이랑 ${relation}이고, 해당 ${userType}의 성향은 ${mbti}입니다.
-    ${descriptionText ? `지금의 상황은 ${descriptionText} 입니다.` : ""}
-    대답을 2~3줄 정도로 해서 만들어주세요.`;
-    const userInput = `${translateText} 라고 질문을 했을 때 실제 속뜻은 무엇일까요?`;
+    const data = `{
+    "age": ${age},
+    "relation": ${relation},
+    "userType": ${userType === "female" ? "여성" : "남성"},
+    "mbti": ${mbti},
+    "descriptionText": ${descriptionText},
+    "translateText": ${translateText},
+}`;
 
-    const res = await fetchChatGPTResponse(context, userInput);
+    const res = await fetchChatGPTResponse(context, data);
     setResult(res);
+    setIsLoading(false);
   };
 
   return (
@@ -105,6 +123,7 @@ export default function Home() {
         clearTranslateText={clearTranslateText}
       />
       <TranslateResult
+        isLoading={isLoading}
         userType={userType}
         gptTranslatedText={result}
         onOpenBottomSheet={handleOpenBottomSheet}
@@ -115,7 +134,7 @@ export default function Home() {
           "flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF] font-bold mx-auto disabled:text-[#BCBCBC] disabled:bg-[#E8E8E8]"
         )}
         onClick={handleTranslateButtonClick}
-        disabled={!translateText}
+        disabled={!translateText || isLoading}
       >
         번역하기
       </button>
@@ -215,11 +234,13 @@ function TranslateTextarea({
 
 type TranslateResultProps = {
   userType: UserType;
-  gptTranslatedText: string;
+  gptTranslatedText: Result;
   onOpenBottomSheet: () => void;
+  isLoading: boolean;
 };
 
 function TranslateResult({
+  isLoading,
   userType,
   gptTranslatedText,
   onOpenBottomSheet,
@@ -243,9 +264,44 @@ function TranslateResult({
           상대는 어떤 사람?
         </div>
       </div>
-      <div className="mt-2 text-2xl font-semibold min-h-14">
-        <TextTypingAnimation text={gptTranslatedText} />
-      </div>
+      {!isLoading ? (
+        <div className="mt-2 text-2xl font-semibold min-h-14">
+          <p>{gptTranslatedText.translatedText}</p>
+          <div
+            style={{
+              padding: "16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+              color: "#8949FF",
+              background: "#F6F0FF",
+              marginTop: "16px",
+            }}
+          >
+            <p style={{ display: "flex", gap: "4px" }}>
+              <Image src={starIcon} alt="" />
+              <span style={{ fontWeight: "600", fontSize: "16px" }}>
+                문장 해석
+              </span>
+            </p>
+            <div style={{ fontWeight: "400", fontSize: "16px" }}>
+              <TextTypingAnimation text={gptTranslatedText.detailDescription} />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "24px 0",
+            color: "#8949FF",
+            fontSize: "24px",
+            fontWeight: "600",
+          }}
+        >
+          번역 중입니다..
+        </div>
+      )}
     </div>
   );
 }
@@ -341,7 +397,7 @@ const TextTypingAnimation = ({ text }: TextTypingAnimationProps) => {
   return (
     <p className="landing-p whitespace-pre-line break-normal">
       {sequence}
-      <span className="inline-block align-top w-0.5 h-[1em] bg-white ml-1 blink" />
+      <span className="inline-block align-top w-0.5 h-[1em] ml-1 blink" />
     </p>
   );
 };
