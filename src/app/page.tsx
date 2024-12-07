@@ -61,21 +61,16 @@ export default function Home() {
   const methods = useForm<OptionData>();
 
   const toggleUserType = () => {
-    const nextUserType =
-      userType === USER_TYPE.FEMALE ? USER_TYPE.MALE : USER_TYPE.FEMALE;
+    const nextUserType = userType === USER_TYPE.FEMALE ? USER_TYPE.MALE : USER_TYPE.FEMALE;
 
     setUserType(nextUserType);
   };
 
-  const handleChangeTranslateText = (
-    event: ChangeEvent<HTMLTextAreaElement>
-  ) => {
+  const handleChangeTranslateText = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setTranslateText(event.target.value);
   };
 
-  const handleChangeDescriptionText = (
-    event: ChangeEvent<HTMLTextAreaElement>
-  ) => {
+  const handleChangeDescriptionText = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setDescriptionText(event.target.value);
   };
 
@@ -112,10 +107,7 @@ export default function Home() {
     <div>
       <Header title="남자어, 여자어 번역기" />
       <FilterBar userType={userType} toggleUserType={toggleUserType} />
-      <DescriptionTextarea
-        value={descriptionText}
-        onChange={handleChangeDescriptionText}
-      />
+      <DescriptionTextarea value={descriptionText} onChange={handleChangeDescriptionText} />
       <TranslateTextarea
         userType={userType}
         value={translateText}
@@ -131,7 +123,7 @@ export default function Home() {
       <button
         type="button"
         className={cn(
-          "flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF] font-bold mx-auto disabled:text-[#BCBCBC] disabled:bg-[#E8E8E8]"
+          "flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF] font-bold mx-auto disabled:text-[#BCBCBC] disabled:bg-[#E8E8E8]",
         )}
         onClick={handleTranslateButtonClick}
         disabled={!translateText || isLoading}
@@ -155,9 +147,7 @@ type FilterBarProps = {
 function FilterBar({ userType, toggleUserType }: FilterBarProps) {
   return (
     <div className="flex justify-between items-center py-3 px-4 font-semibold">
-      <div className="w-[135px] text-center">
-        {userType === USER_TYPE.FEMALE ? "여자어" : "남자어"}
-      </div>
+      <div className="w-[135px] text-center">{userType === USER_TYPE.FEMALE ? "여자어" : "남자어"}</div>
       <div
         className="w-14 h-8 flex justify-center items-center border rounded-full cursor-pointer border-[#8949FF] bg-[#F6F0FF]"
         role="button"
@@ -165,9 +155,7 @@ function FilterBar({ userType, toggleUserType }: FilterBarProps) {
       >
         <Image src={doubleArrow} alt="" />
       </div>
-      <div className="w-[135px] text-center">
-        {userType === USER_TYPE.FEMALE ? "남자어" : "여자어"}
-      </div>
+      <div className="w-[135px] text-center">{userType === USER_TYPE.FEMALE ? "남자어" : "여자어"}</div>
     </div>
   );
 }
@@ -179,12 +167,7 @@ type TranslateTextareaProps = {
   clearTranslateText: () => void;
 };
 
-function TranslateTextarea({
-  userType,
-  value,
-  onChange,
-  clearTranslateText,
-}: TranslateTextareaProps) {
+function TranslateTextarea({ userType, value, onChange, clearTranslateText }: TranslateTextareaProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hiddenTextareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -239,23 +222,11 @@ type TranslateResultProps = {
   isLoading: boolean;
 };
 
-function TranslateResult({
-  isLoading,
-  userType,
-  gptTranslatedText,
-  onOpenBottomSheet,
-}: TranslateResultProps) {
+function TranslateResult({ isLoading, userType, gptTranslatedText, onOpenBottomSheet }: TranslateResultProps) {
   return (
     <div className="pt-6 pb-4 px-4">
       <div className="flex justify-between items-center">
-        <div
-          className={cn("font-medium", {
-            "text-[#FF3A3A]": userType === USER_TYPE.MALE,
-            "text-[#3C5CFF]": userType === USER_TYPE.FEMALE,
-          })}
-        >
-          {userType === USER_TYPE.FEMALE ? "남자어" : "여자어"}
-        </div>
+        <div className={cn("font-medium")}>{userType === USER_TYPE.FEMALE ? "남자어" : "여자어"}</div>
         <div
           className="font-semibold text-[#8949FF] underline cursor-pointer"
           role="button"
@@ -265,29 +236,31 @@ function TranslateResult({
         </div>
       </div>
       {!isLoading ? (
-        <div className="mt-2 text-2xl font-semibold min-h-14">
+        <div className="mt-2 text-xl font-semibold min-h-14">
           <p>{gptTranslatedText.translatedText}</p>
-          <div
-            style={{
-              padding: "16px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-              color: "#8949FF",
-              background: "#F6F0FF",
-              marginTop: "16px",
-            }}
-          >
-            <p style={{ display: "flex", gap: "4px" }}>
-              <Image src={starIcon} alt="" />
-              <span style={{ fontWeight: "600", fontSize: "16px" }}>
-                문장 해석
-              </span>
-            </p>
-            <div style={{ fontWeight: "400", fontSize: "16px" }}>
-              <TextTypingAnimation text={gptTranslatedText.detailDescription} />
+
+          {gptTranslatedText.translatedText && (
+            <div
+              style={{
+                padding: "16px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                color: "#8949FF",
+                background: "#F6F0FF",
+                marginTop: "16px",
+              }}
+              className="rounded-lg"
+            >
+              <p style={{ display: "flex", gap: "4px" }}>
+                <Image src={starIcon} alt="" />
+                <span style={{ fontWeight: "600", fontSize: "16px" }}>문장 해석</span>
+              </p>
+              <div style={{ fontWeight: "400", fontSize: "16px" }}>
+                <TextTypingAnimation text={gptTranslatedText.detailDescription} />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       ) : (
         <div
@@ -299,7 +272,7 @@ function TranslateResult({
             fontWeight: "600",
           }}
         >
-          번역 중입니다..
+          약 15초 정도 걸릴 수 있어요.
         </div>
       )}
     </div>
@@ -334,19 +307,9 @@ function DescriptionTextarea({ value, onChange }: DescriptionTextareaProps) {
 
   return (
     <div className="p-4 bg-[#FAFAFA] w-full mx-auto">
-      <div
-        className="flex justify-between items-center cursor-pointer"
-        role="button"
-        onClick={toggle}
-      >
-        <div className="font-semibold text-[#595959]">
-          더 기똥찬 번역 결과를 보고 싶다면?
-        </div>
-        <Image
-          className={cn({ "rotate-180": isOpen })}
-          src={arrowDownIcon}
-          alt=""
-        />
+      <div className="flex justify-between items-center cursor-pointer" role="button" onClick={toggle}>
+        <div className="font-semibold text-[#595959]">더 기똥찬 번역 결과를 보고 싶다면?</div>
+        <Image className={cn({ "rotate-180": isOpen })} src={arrowDownIcon} alt="" />
       </div>
       {isOpen && (
         <div className="mt-4 space-y-2">
