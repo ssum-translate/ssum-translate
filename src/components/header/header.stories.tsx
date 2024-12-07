@@ -13,7 +13,5 @@ type Story = StoryObj<typeof Header>;
 
 export const HeaderStory: Story = {
   name: "Header",
-  args: {
-    title: "서비스 이름",
-  },
+  args: {},
 };
