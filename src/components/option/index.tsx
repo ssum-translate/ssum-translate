@@ -3,14 +3,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
 import closeBlackIcon from "@/assets/icons/close-black.svg";
 import FILTERS from "@/components/option/filter-data";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "react-hook-form";
 import { Filter } from "@/components/option/filter-data";
@@ -38,7 +31,7 @@ function OptionForm({ onCloseBottomSheet }: OptionFormProps) {
     <Form {...form}>
       <div
         style={{ position: "absolute", top: 0, width: "100%" }}
-        className="bg-black bg-opacity-50 h-screen"
+        className="bg-black bg-opacity-50 h-screen select-none"
       >
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -68,9 +61,7 @@ export default OptionForm;
 function OptionHeader({ onCloseBottomSheet }: OptionFormProps) {
   return (
     <div className="flex justify-between font-medium text-[#121212]">
-      <span className="text-[#121212] text-lg font-semibold leading-6">
-        상대방는 어떤 사람?
-      </span>
+      <span className="text-[#121212] text-lg font-semibold leading-6">상대방는 어떤 사람?</span>
       <button type="button" onClick={onCloseBottomSheet}>
         <Image src={closeBlackIcon} alt="" />
       </button>
@@ -79,20 +70,10 @@ function OptionHeader({ onCloseBottomSheet }: OptionFormProps) {
 }
 
 function OptionDescription() {
-  return (
-    <p className="my-2 mb-6 text-[#8949FF] leading-6">
-      선택 시 더더욱 기똥찬 번역 결과를 확인할 수 있어요
-    </p>
-  );
+  return <p className="my-2 mb-6 text-[#8949FF] leading-6">선택 시 더더욱 기똥찬 번역 결과를 확인할 수 있어요</p>;
 }
 
-function Field({
-  filter,
-  form,
-}: {
-  filter: Filter;
-  form: UseFormReturn<OptionData>;
-}) {
+function Field({ filter, form }: { filter: Filter; form: UseFormReturn<OptionData> }) {
   return (
     <FormField
       key={filter.question}
@@ -110,9 +91,7 @@ function Field({
               >
                 {filter.items.map((item) => {
                   const isSelected = field.value === item;
-                  return (
-                    <Radio key={item} text={item} isSelected={isSelected} />
-                  );
+                  return <Radio key={item} text={item} isSelected={isSelected} />;
                 })}
               </RadioGroup>
             </FormControl>
