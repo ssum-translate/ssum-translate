@@ -22,7 +22,7 @@ export default function Home() {
       <div className="flex justify-center">
         <button
           type="button"
-          className="flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF]"
+          className="flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF] font-bold"
         >
           번역하기
         </button>
