@@ -2,7 +2,11 @@
 
 import Image from "next/image";
 import { ChangeEvent, useEffect, useReducer, useRef, useState } from "react";
-import Lottie from "react-lottie-player";
+
+import dynamic from "next/dynamic";
+
+// 외부 패키지를 동적 로드
+const ReactLottiePlayer = dynamic(() => import("react-lottie-player"), { ssr: false });
 
 import doubleArrow from "@/assets/icons/double-arrow.svg";
 import closeIcon from "@/assets/icons/close.svg";
@@ -265,7 +269,7 @@ function TranslateResult({ isLoading, userType, gptTranslatedText, onOpenBottomS
           )}
         </div>
       ) : (
-        <Lottie loop animationData={animationData} play />
+        <ReactLottiePlayer loop animationData={animationData} play />
 
         // <Lottie options={defaultOptions} height={400} width={400} />
         // <div
