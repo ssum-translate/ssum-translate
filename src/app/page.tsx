@@ -308,15 +308,15 @@ function DescriptionTextarea({ value, onChange }: DescriptionTextareaProps) {
         <Image className={cn({ "rotate-180": isOpen })} src={arrowDownIcon} alt="" />
       </div>
       {isOpen && (
-        <div className="mt-4 space-y-2">
+        <div className="mt-4">
           <Textarea
             ref={textareaRef}
-            className="bg-[#FAFAFA] text-base placeholder:text-sm placeholder:whitespace-pre-line scrollbar-hide h-16"
+            className="text-base placeholder:text-sm placeholder:whitespace-pre-line scrollbar-hide bg-white border border-[#EEEEEE] rounded-[8px] p-2 h-24"
             value={value}
             placeholder={`전후 사정을 입력해주시면 더 정확한 결과를 알려드려요.\nex) 데이트 중 저녁메뉴를 정하고 있는 상황, 3년 장기연애해서 편안한 커플사이, 썸녀가 나에게 질문을 하고 있는 상황 등`}
             onChange={handleChange}
           />
-          <Textarea ref={hiddenTextareaRef} className="sr-only h-6" />
+          <Textarea ref={hiddenTextareaRef} className="sr-only h-24" />
         </div>
       )}
     </div>
