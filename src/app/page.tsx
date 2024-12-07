@@ -61,6 +61,7 @@ function TranslateTextarea({ value, onChange }: TranslateTextareaProps) {
     if (!textarea || !hiddenTextarea) {
       return;
     }
+
     onChange(event);
 
     hiddenTextarea.value = value;
