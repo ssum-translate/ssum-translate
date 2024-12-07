@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 
 import "./globals.css";
 
@@ -15,6 +16,8 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>{children}</body>
+      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GA_ID as string} />
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID as string} />
     </html>
   );
 }
