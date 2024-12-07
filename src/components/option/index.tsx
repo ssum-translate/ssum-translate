@@ -12,29 +12,40 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { Filter } from "@/components/option/filter-data";
 import { UseFormReturn } from "react-hook-form";
-import { Question } from "@/components/option/filter-data";
+import { NameField } from "@/components/option/filter-data";
 
-type OptionData = {
-  [k in Question]?: string;
+export type OptionData = {
+  [k in NameField]?: string;
 };
-function OptionForm() {
-  const form = useForm<OptionData>();
+
+interface OptionFormProps {
+  onCloseBottomSheet: () => void;
+}
+
+function OptionForm({ onCloseBottomSheet }: OptionFormProps) {
+  const form = useFormContext();
   const onSubmit = (data: OptionData) => {
-    console.log(data);
+    form.setValue("age", data.age);
+    form.setValue("relation", data.relation);
+    form.setValue("mbti", data.mbti);
+    onCloseBottomSheet();
   };
 
   return (
     <Form {...form}>
-      <div className="bg-black bg-opacity-50 h-screen">
+      <div
+        style={{ position: "absolute", top: 0, width: "100%" }}
+        className="bg-black bg-opacity-50 h-screen"
+      >
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="rounded-t-2xl absolute bottom-0 z-[999] bg-white animate-slide-up"
         >
           <div className="flex flex-col p-6 pt-6">
-            <OptionHeader />
+            <OptionHeader onCloseBottomSheet={onCloseBottomSheet} />
             <OptionDescription />
             {FILTERS.map((filter) => (
               <Field key={filter.question} filter={filter} form={form} />
@@ -54,13 +65,13 @@ function OptionForm() {
 
 export default OptionForm;
 
-function OptionHeader() {
+function OptionHeader({ onCloseBottomSheet }: OptionFormProps) {
   return (
     <div className="flex justify-between font-medium text-[#121212]">
       <span className="text-[#121212] text-lg font-semibold leading-6">
         상대방는 어떤 사람?
       </span>
-      <button type="button">
+      <button type="button" onClick={onCloseBottomSheet}>
         <Image src={closeBlackIcon} alt="" />
       </button>
     </div>
@@ -86,7 +97,7 @@ function Field({
     <FormField
       key={filter.question}
       control={form.control}
-      name={filter.question}
+      name={filter.name}
       render={({ field }) => (
         <FormItem className="flex flex-col gap-4 mb-4">
           <div>
