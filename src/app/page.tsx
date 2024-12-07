@@ -129,7 +129,7 @@ export default function Home() {
       <button
         type="button"
         className={cn(
-          "flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF] font-bold mx-auto disabled:text-[#BCBCBC] disabled:bg-[#E8E8E8]",
+          "flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-2xl text-white bg-[#8949FF] font-bold mx-auto disabled:text-[#BCBCBC] disabled:bg-[#E8E8E8]",
         )}
         onClick={handleTranslateButtonClick}
         disabled={!translateText || isLoading}
@@ -152,7 +152,7 @@ type FilterBarProps = {
 
 function FilterBar({ userType, toggleUserType }: FilterBarProps) {
   return (
-    <div className="flex justify-between items-center py-3 px-4 font-semibold">
+    <div className="flex justify-between items-center py-3 px-4 font-semibold border-b border-[#EEEEEE]">
       <div className="w-[135px] text-center">{userType === USER_TYPE.FEMALE ? "여자어" : "남자어"}</div>
       <div
         className="w-14 h-8 flex justify-center items-center border rounded-full cursor-pointer border-[#8949FF] bg-[#F6F0FF]"
@@ -193,7 +193,7 @@ function TranslateTextarea({ userType, value, onChange, clearTranslateText }: Tr
   };
 
   return (
-    <div className="min-h-[112px] py-6 px-4 border shadow-sm  border-[#EEEEEE]">
+    <div className="min-h-[112px] py-6 px-4 border border-[#EEEEEE]">
       <div className="flex justify-between items-center">
         <label
           className={cn({
@@ -256,7 +256,7 @@ function TranslateResult({ isLoading, userType, gptTranslatedText, onOpenBottomS
                 background: "#F6F0FF",
                 marginTop: "16px",
               }}
-              className="rounded-lg"
+              className="rounded-lg max-w-[358px] mx-auto"
             >
               <p style={{ display: "flex", gap: "4px" }}>
                 <Image src={starIcon} alt="" />
@@ -270,19 +270,6 @@ function TranslateResult({ isLoading, userType, gptTranslatedText, onOpenBottomS
         </div>
       ) : (
         <ReactLottiePlayer loop animationData={animationData} play />
-
-        // <Lottie options={defaultOptions} height={400} width={400} />
-        // <div
-        //   style={{
-        //     textAlign: "center",
-        //     padding: "24px 0",
-        //     color: "#8949FF",
-        //     fontSize: "24px",
-        //     fontWeight: "600",
-        //   }}
-        // >
-        //   약 15초 정도 걸릴 수 있어요.
-        // </div>
       )}
     </div>
   );
@@ -348,7 +335,6 @@ const TextTypingAnimation = ({ text }: TextTypingAnimationProps) => {
   useEffect(() => {
     const typingInterval = setInterval(() => {
       if (textCount >= text.length) {
-        //text length 초과 시 undefind가 출력되는 것을 방지
         setIsTypingPaused(true);
         return;
       }
@@ -361,10 +347,10 @@ const TextTypingAnimation = ({ text }: TextTypingAnimationProps) => {
       } else {
         setTextCount((prevCount) => prevCount + 1);
       }
-    }, 50); // 설정한 초만큼 일정한 간격마다 실행된다
+    }, 50);
 
-    return () => clearInterval(typingInterval); //컴포넌트가 마운트 해제되거나, 재렌더링 될 때마다 setInterval를 정리하는 함수를 반환함.
-  }, [text, textCount, isTypingPaused]); //해당 상태들이 변경될 때마다 useEffect가 다시 실행 됨
+    return () => clearInterval(typingInterval);
+  }, [text, textCount, isTypingPaused]);
 
   return (
     <p className="landing-p whitespace-pre-line break-normal">
