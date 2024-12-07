@@ -1,12 +1,16 @@
+"use client";
+
 import Image from "next/image";
+import { useReducer } from "react";
 
 import doubleArrow from "@/assets/icons/double-arrow.svg";
+import closeIcon from "@/assets/icons/close.svg";
+import arrowDownIcon from "@/assets/icons/arrow-down.svg";
 
 import Header from "@/components/header/header";
 import Textarea from "@/components/ui/textarea";
 
-import closeIcon from "@/assets/icons/close.svg";
-import arrowRightIcon from "@/assets/icons/arrow-right.svg";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   return (
@@ -18,7 +22,7 @@ export default function Home() {
       <div className="flex justify-center">
         <button
           type="button"
-          className="flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF]"
+          className="flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-full text-white bg-[#8949FF] font-bold"
         >
           번역하기
         </button>
@@ -55,17 +59,26 @@ function TranslateTextarea() {
 }
 
 function TranslateResult() {
+  const [isOpen, toggle] = useReducer((state) => !state, false);
+
   return (
     <div className="pt-6 pb-4 px-4">
-      <div className="text-[#8949FF] justify-between items-center flex">
+      <div>
         <div>남자어</div>
-        <div className="font-semibold text-[#8949FF] underline">상대방은 어떤 사람?</div>
       </div>
       <div className="mt-2 text-2xl font-semibold">번역한 내용이 보여요</div>
 
-      <div className="p-4 mt-14 flex justify-between items-center bg-[#F6F0FF] rounded-2xl max-w-[358px] w-full mx-auto">
-        <div className="font-semibold text-[#8949FF]">더 기똥찬 번역 결과를 보고 싶다면?</div>
-        <Image src={arrowRightIcon} alt="" />
+      <div className="p-4 mt-14 bg-[#FAFAFA] rounded-2xl max-w-[358px] w-full mx-auto">
+        <div className="flex justify-between items-center cursor-pointer" role="button" onClick={toggle}>
+          <div className="font-semibold text-[#595959]">더 기똥찬 번역 결과를 보고 싶다면?</div>
+          <Image className={cn({ "rotate-180": isOpen })} src={arrowDownIcon} alt="" />
+        </div>
+        {isOpen && (
+          <div className="mt-4 space-y-2">
+            <div className="font-semibold text-[#8949FF] underline">상대방은 어떤 사람?</div>
+            <div className="font-semibold text-[#8949FF] underline">전후 맥락은?</div>
+          </div>
+        )}
       </div>
     </div>
   );
