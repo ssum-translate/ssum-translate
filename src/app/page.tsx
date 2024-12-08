@@ -44,7 +44,8 @@ export default function Home() {
     translatedText: "",
     detailDescription: "",
   });
-  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGptError, setIsGptError] = useState(false);
 
   const methods = useForm<OptionData>();
 
@@ -85,12 +86,29 @@ export default function Home() {
     "translateText": ${translateText},
 }`;
 
-    startTransition(async () => {
-      const res = await sendChatGPT(context, data);
-      setResult(res);
-    });
-  };
+    try {
+      setIsLoading(true);
 
+      const response = await fetch("/api", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ context, userInput: data }),
+      });
+      const result = await response.json();
+
+      if (result.success === false) {
+        setIsLoading(false);
+        setIsGptError(true);
+        return;
+      }
+
+      setResult(result.data);
+    } catch {
+      setIsGptError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div>
       <Header />
@@ -102,19 +120,23 @@ export default function Home() {
         onChange={handleChangeTranslateText}
         clearTranslateText={clearTranslateText}
       />
-      <TranslateResult
-        isLoading={isPending}
-        userType={userType}
-        gptTranslatedText={result}
-        onOpenBottomSheet={handleOpenBottomSheet}
-      />
+      {isGptError ? (
+        <div className="px-4 my-14 text-center">api 비용이 초과되어서 일시적으로 중지되었어요.</div>
+      ) : (
+        <TranslateResult
+          isLoading={isLoading}
+          userType={userType}
+          gptTranslatedText={result}
+          onOpenBottomSheet={handleOpenBottomSheet}
+        />
+      )}
       <button
         type="button"
         className={cn(
           "flex justify-center items-center max-w-[358px] w-full py-3.5 rounded-2xl text-white bg-[#8949FF] font-bold mx-auto disabled:text-[#BCBCBC] disabled:bg-[#E8E8E8]",
         )}
         onClick={handleTranslateButtonClick}
-        disabled={!translateText || isPending}
+        disabled={!translateText || isLoading}
       >
         번역하기
       </button>
